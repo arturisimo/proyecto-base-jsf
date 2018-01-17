@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/layouts/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="bodyId" value="login"/>
+
+	<ui:define name="body">
+    	<div class="col-md-4 col-md-offset-4">
+	    	<div id="login-box" class="login-box panel panel-default">
+				<div class="panel-heading">
+			    	<h3 class="panel-title">#{MensajeApp.loginTitulo}</h3>
+			 	</div>
+				<div class="panel-body">
+			        <h:form id="loginForm">
+			        	<fieldset>
+			            	<div class="form-group">
+			            		<div class="input-group">
+      								<div class="input-group-addon"><i class="fa fa-male"></i></div>
+						            <p:inputText id="usuario" value="#{loginView.codigoUsuario}" styleClass="form-control" placeholder="#{MensajeApp.loginUsuario}" required="true" tabindex="1"/>
+								</div>
+					        </div>
+					        <div class="form-group">
+					        	<div class="input-group">
+      								<div class="input-group-addon" style="width: 36; height: 38;"><i class="fa fa-lock"></i></div>
+						            <p:password id="contrasenia" value="#{loginView.contrasenia}" styleClass="form-control" placeholder="#{MensajeApp.loginContrasena}" required="true" tabindex="2"/>
+						        </div>
+					        </div>
+				            <h:commandButton action="#{loginView.conectar}" value="#{MensajeApp.loginEntrar}" styleClass="btn btn-lg btn-primary btn-block" tabindex="3" />			            
+						</fieldset>
+	       			</h:form>
+	       		</div>
+	       	</div>
+		</div>
+    </ui:define>
+</ui:composition>

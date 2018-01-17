@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pretty-config xmlns="http://ocpsoft.com/prettyfaces/3.3.0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://ocpsoft.com/prettyfaces/3.3.0
+			http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.3.0.xsd">
+
+	<!-- Paginas obligatorias -->
+	<url-mapping id="raiz">
+		<pattern value="/" />
+		<view-id value="/pages/login/frmLogin.xhtml" />
+	</url-mapping>
+		
+	<url-mapping id="sesionCaducada">
+		<pattern value="/sesion-caducada" />
+		<view-id value="/pages/error/frmSessionTimeout.xhtml" />
+	</url-mapping>
+	
+	<url-mapping id="usuarios">
+		<pattern value="/usuarios" />
+		<view-id value="/pages/usuarios.xhtml" />
+	</url-mapping>
+	
+	<url-mapping id="presentacion">
+		<pattern value="/presentacion" />
+		<view-id value="/pages/presentacion/frmPresentacion.xhtml" />
+	</url-mapping>
+	
+</pretty-config>

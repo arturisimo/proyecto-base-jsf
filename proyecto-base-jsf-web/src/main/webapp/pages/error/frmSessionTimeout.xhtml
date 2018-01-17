@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/layouts/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:of="http://omnifaces.org/functions">
+
+	<ui:param name="bodyId" value="timeOut"/>
+
+	<ui:define name="body">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1 well">
+					<p>
+						<h:outputText value="#{MensajeApp.frmSessionTimeout_Descripcion}" />
+					</p>
+					
+					<p style="text-align: right;">
+						<a href="#{requestScope['javax.servlet.error.request_uri']}" value="#{MensajeApp.frmSessionTimeout_Inicio}" />
+					</p>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

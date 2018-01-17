@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee/"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_2.xsd"
+   version="2.2">
+
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+			INYECCION SPRING
+	++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<application>
+		<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+		<message-bundle>jsf2.Validacion</message-bundle>
+		<resource-bundle>
+			<base-name>mensaje.Mensaje</base-name>
+			<var>MensajeApp</var>
+		</resource-bundle>
+		<locale-config>
+			<default-locale>es</default-locale>
+		</locale-config>
+	</application>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+		MANEJO DE RECURSOS CON OMNIFACES                       )
+	++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<application>
+	     <resource-handler>org.omnifaces.resourcehandler.CombinedResourceHandler</resource-handler>
+	 </application>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+		CAPTURA DE ERRORES CON OMNIFACES                       )
+	++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<factory>
+		<exception-handler-factory>org.omnifaces.exceptionhandler.FullAjaxExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+	
+	<validator> 
+	      <validator-id>nifValidator</validator-id>
+	      <validator-class>org.apz.xxx.web.view.validator.NIFValidator</validator-class>
+	</validator>
+	
+</faces-config>

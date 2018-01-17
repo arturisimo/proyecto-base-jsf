@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/layouts/layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:param name="bodyId" value="errorGenerico"/>
+
+	<ui:define name="body">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1 well">
+					<h1>Error generico</h1>
+					<ul>
+						<li>Fecha/Hora: #{of:formatDate(now, 'yyyy-MM-dd HH:mm:ss')}</li>
+						<li>User agent: #{header['user-agent']}</li>
+						<li>Request URI: #{requestScope['javax.servlet.error.request_uri']}</li>
+						<li>Ajax request: #{facesContext.partialViewContext.ajaxRequest ? 'Yes' : 'No'}</li>
+						<li>Status code: #{requestScope['javax.servlet.error.status_code']}</li>
+						<li>Exception type: #{requestScope['javax.servlet.error.exception_type']}</li>
+						<li>Exception message: #{requestScope['javax.servlet.error.message']}</li>
+						<li jsf:rendered="#{requestScope['javax.servlet.error.status_code'] != 404}">Stack trace: 
+							<pre style="background: white;">#{of:printStackTrace(requestScope['javax.servlet.error.exception'])}</pre>
+						</li>
+						<li jsf:rendered="#{requestScope['javax.servlet.error.status_code'] == 404}">Stack trace: 
+							<pre style="background: white;">#{MensajeApp.mensajeError404}</pre>
+						</li>
+					</ul>
+					
+					<p style="text-align: right;">
+						<a  href="#{request.requestURL.substring(0, request.requestURL.length() - request.requestURI.length())}#{request.contextPath}/">#{MensajeApp.volverInicio}</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

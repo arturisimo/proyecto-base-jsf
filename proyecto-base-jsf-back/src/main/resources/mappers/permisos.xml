@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.apz.xxx.back.dao.PermisosDao">
+
+
+	<resultMap id="resultPermiso" 	type="Permiso">
+		<result property="id" 					column="ID"/>
+		<result property="nombre" 				column="NOMBRE"/>
+		<result property="descripcion" 			column="DESCRIPCION"/>
+		<result property="permisoPadre" 		column="PERMISO_PADRE"/>
+	</resultMap>
+	  
+	<!-- ..................................... -->
+	<!-- 	getAllPermisos					   -->
+	<!-- ..................................... -->
+	<select id="getAllPermisos" parameterType="Permiso" resultMap="resultPermiso">
+    	
+    	    SELECT 
+    	    
+	    		id				AS 	ID,
+	    		nombre	  		AS 	NOMBRE,
+	    		descripcion		AS 	DESCRIPCION,
+	    		permiso_padre	AS 	PERMISO_PADRE
+	    		
+    		FROM 
+    			<include refid="tablas.XXX_SEG_PERMISOS"/>
+    			
+    		ORDER BY ID
+  	</select>
+  	
+  	
+
+</mapper>

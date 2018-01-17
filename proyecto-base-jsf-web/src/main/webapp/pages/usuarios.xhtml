@@ -1,0 +1,127 @@
+<ui:composition template="/layouts/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" 
+				xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+				xmlns:pretty="http://ocpsoft.com/prettyfaces" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:param name="bodyId" value="usuarioBody"/>
+	
+	<ui:define name="body">
+	
+	<h:body onload="#{usuariosView.init()}">
+	
+		<div class="splash">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center">
+						<h1>#{MensajeApp.usuarios}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+    
+
+	    <div class="container">
+	      <!-- Example row of columns -->
+	      <div class="row">
+	        <div class="col-lg-10 center-col">
+				<h:form id="formUsuarios">
+					<p:panel styleClass="row form-group col-xs-12" style="text-align: center; margin-top:0.7em;border:none;">			
+						<p:commandButton styleClass="btn btn-primary" update=":formUsuarios:usuarioDetail" value="Alta" oncomplete="PF('editForm').show();" action="#{usuariosView.alta()}"  />
+						<p:commandButton styleClass="btn btn-default" value="Volver" onclick="" />
+					</p:panel>
+					
+					<p:dataTable id="tablaUsuarios" var="usuarioItem" value="#{usuariosView.usuarios}" paginator="false" >
+							
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column class="columna-20"  >
+						            	<f:facet name="header">
+										<h:outputText value="ID" />
+										</f:facet>
+									</p:column>
+									<p:column class="columna-70"  >
+						            	<f:facet name="header">
+										<h:outputText value="#{MensajeApp.usuario}" />
+										</f:facet>
+									</p:column>	
+									<p:column class="columna-70"  >
+						            	<f:facet name="header">
+										<h:outputText value="#{MensajeApp.usuario}" />
+										</f:facet>
+									</p:column>	
+									<p:column class="columna-70"  >
+											<f:facet name="header">
+											<h:outputText value="#{MensajeApp.usuario_password}" />
+										</f:facet>
+									</p:column>
+									<p:column class="columna-20"  >
+											<f:facet name="header">
+											<h:outputText value="#{MensajeApp.usuario_acciones}" />
+										</f:facet>
+									</p:column>
+								</p:row>
+					        </p:columnGroup>
+							
+							<p:column class="columna-20" >
+								<h:outputText value="#{usuarioItem.id}"  />
+							</p:column>
+							<p:column class="columna-70" >
+								<h:outputText value="#{usuarioItem.nombre}"  />
+							</p:column>
+							<p:column class="columna-70" >
+								<h:outputText value="#{usuarioItem.login}"  />
+							</p:column>
+							<p:column class="columna-70" >
+								<h:outputText value="#{usuarioItem.email}"  />
+							</p:column>
+							<p:column class="columna-10" >
+								<p:commandButton  icon="ui-icon-pencil" update=":formUsuarios:usuarioDetail" title="#{MensajeApp.usuario_editar_titulo} #{usuarioItem.login}" oncomplete="PF('editForm').show();" action="#{usuariosView.mostrarValores(usuarioItem)}"  />
+								<p:commandButton  icon="ui-icon-trash" title="#{MensajeApp.usuario_eliminar_titulo} #{usuarioItem.login}" action="#{usuariosView.eliminar(usuarioItem)}"  />
+							</p:column>
+						
+					</p:dataTable>
+					
+					 
+					<p:dialog header="#{MensajeApp.usuario_editar_titulo}" widgetVar="editForm" modal="true"  dynamic="true" draggable="false" width="320" >
+	    				<p:outputPanel id="usuarioDetail">
+							<h4><i class="fa fa-cogs"></i>&#160;<h:outputText value="#{usuariosView.usuario.login}" /></h4> 
+							<p:panel styleClass="row" style="border:1px solid #dddddd;">
+			    				<p:panel styleClass="col-xs-12">								
+		                            
+		                            <p:panel styleClass="col-xs-12">
+									   <p:outputLabel for="login" styleClass="control-label" value="Login" title="Login" />
+									   <h:inputText id="login" styleClass="control-label" value="#{usuariosView.usuario.login}" required="true"> 
+							           </h:inputText>
+									</p:panel>
+									
+									 <p:panel styleClass="col-xs-12">
+									   <p:outputLabel for="nombre" styleClass="control-label" value="Nombre" title="Nombre" />
+									   <h:inputText id="nombre" styleClass="control-label" value="#{usuariosView.usuario.nombre}" required="true"> 
+							                    <f:validator validatorId="nifValidator"/>
+							           </h:inputText>
+									</p:panel>
+		                            
+		                            <p:panel styleClass="col-xs-12">
+									   <p:outputLabel for="email" styleClass="control-label" value="Email" title="Email" />
+									   <h:inputText id="email" styleClass="control-label" value="#{usuariosView.usuario.email}" validatorMessage="El mail #{usuariosView.usuario.email} no es válido"> 
+							                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+							           </h:inputText>
+									</p:panel>
+			                        
+			                        <p:panel styleClass="form-group col-xs-12" style="text-align: center; margin-top:0.7em;">
+											<h:commandButton styleClass="btn btn-primary" value="Aceptar" type="submit" action="#{usuariosView.edit}"  style="margin-right:1em;"  />
+											<h:commandButton styleClass="btn btn-default" value="Cancelar" onclick="PF('editForm').close;" />
+									</p:panel>	
+								</p:panel>
+				    		</p:panel>
+			    		</p:outputPanel>	
+				
+					</p:dialog> 
+								
+				</h:form>
+				</div>
+			</div>
+	</div>
+	</h:body>
+	</ui:define>
+</ui:composition>

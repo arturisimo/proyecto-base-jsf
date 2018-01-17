@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml">
+<f:view xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core" 
+    xmlns:o="http://omnifaces.org/ui"
+    xmlns:p="http://primefaces.org/ui" 
+    xmlns:jsf="http://xmlns.jcp.org/jsf"
+   	locale="es">
+   	
+   	<h:head>
+		
+		<!-- Cabecera. Idioma y codificación -->
+		<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+		<meta name="language" content="es" />
+		
+		<!-- Icono del xxx -->
+		<link rel="shortcut icon" type="image/x-icon"  href="#{resource['xxx:img/favicon.ico']}" />
+		
+		<!-- Iconos de las páginas -->
+		<h:outputStylesheet library="xxx" name="css/font-awesome.min.css" />
+
+		<!-- Hoja de estilos bootstrap yeti -->
+		<h:outputStylesheet library="yeti" name="css/bootstrap.min.css" />
+		<h:outputScript library="yeti" name="js/bootstrap.min.js" />
+		<h:outputScript library="yeti" name="js/bootbox.min.js" />
+		
+		<!-- Hoja de estilos xxx -->
+		<h:outputStylesheet library="xxx" name="css/xxx.css" />
+		
+		<!-- Cabecera. Título de la página -->
+		<title>#{MensajeApp.plantillaNombrePagina}</title>
+		
+	</h:head>
+	<body id="#{bodyId}">
+	
+		<!-- Cuerpo. Menú -->
+		<ui:include src="/layouts/menu/menu.xhtml"/>
+	    
+	    <!-- Cuerpo. Imagen de fondo -->
+	    <ui:insert name="splash"/>
+	    
+		<!-- Cuerpo. Contenido -->
+	    <div class="container" id="content">
+	    
+	    	<!-- Cuerpo. Area de trabajo -->
+	        <div class="row">
+	            <ui:insert name="body"/>
+	        </div>
+	        
+	        <!-- Cuerpo. Mensajes de error --> 
+	   		<p:growl id="mensajes" showDetail="true" showSummary="false" showIcon="true" sticky="true" autoUpdate="true"/>
+	        
+	        <!-- Cuerpo. Ventana barra de progreso -->
+	        <p:ajaxStatus onstart="PF('ajaxStatus').show();" oncomplete="PF('ajaxStatus').hide();"/>
+			<p:dialog widgetVar="ajaxStatus" draggable="false" closable="false" resizable="false" showHeader="false">
+				<p>${MensajeApp.operacionEnCurso}</p>
+				<p class="text-center"><p:graphicImage name="img/ajaxloadingbar.gif" library="xxx"/></p>
+			</p:dialog>
+			
+			<!-- Componente encargado de controlar la sesión para componentes Ajax -->
+			<!-- Si no se hace uso de él los eventos Ajax dejan de contestar y el usuario no es consciente de ello -->
+			<h:form id="sessionForm">
+			    <p:idleMonitor timeout="1500000">
+			    	<p:ajax event="idle" oncomplete="checkTimeOut()" />
+			    </p:idleMonitor>
+			    <h:commandLink action="#{sesionView.desconectar()}" id="sesionExpiredExecute" styleClass="hidden"/>
+			    
+			    <script type="text/javascript">
+					//<![CDATA[
+					   var mostrandose = false;
+			           function checkTimeOut() {
+			        	   // Si estamos en la pagina raiz o en la de sesion caducada
+			        	   // no mostramos el mensaje
+			        	   var pathName = $(location).attr('pathname');
+			        	   if (pathName != '/consulta-padron-web/' && pathName != '/consulta-padron-web/sesion-caducada' && !mostrandose) {
+			        		    mostrandose = true;
+			        		    bootbox.dialog({ 
+								message: '#{MensajeApp.sesionCaducadaAjax}',
+								closeButton: false,
+									buttons: {
+										main: { 
+											label: '#{MensajeApp.menuDesconectar}', 
+											className: 'btn btn-primary',
+											callback: function() {
+												mojarra.jsfcljs(document.getElementById('sessionForm'), {'sessionForm:sesionExpiredExecute':'sessionForm:sesionExpiredExecute'}, '');
+										    }}
+										}
+						   		});
+			        	   }
+			           }
+					//]]>
+					</script>
+			</h:form>
+			
+	    </div>
+	
+		<!-- Pie. -->
+		<div id="footerTop"></div>
+	    <div id="footer" class="container-fluid navbar-fixed-bottom">
+	   		
+	       <!-- Pie. Versión App y usuario conectado -->
+	        <h:panelGroup styleClass="col-sm-6 text-left">
+	        	<h:outputText value="#{MensajeApp.plantillaVersionApp}"/>
+	        	<h:outputText value=" | #{sesionView.usuario.login}" rendered="#{!empty sesionView.usuario}"/>
+	        </h:panelGroup>
+	        
+	        <!-- Pie. Copyright y url -->
+	        <h:panelGroup styleClass="col-sm-6 text-right">
+	            &#169;<h:outputText value=" #{MensajeApp.plantillaCopyrightAnyo}"/> <a href="#{MensajeApp.plantillaUrlCompania}"><h:outputText value="#{MensajeApp.plantillaNombreCompania}"/></a>
+	        </h:panelGroup>
+	         
+	        
+	    </div>
+	    </body>
+	</f:view>
+</html>

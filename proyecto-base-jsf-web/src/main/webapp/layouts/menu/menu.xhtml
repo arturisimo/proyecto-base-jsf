@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:f="http://java.sun.com/jsf/core"
+      			xmlns:h="http://java.sun.com/jsf/html" 
+      			xmlns:ui="http://java.sun.com/jsf/facelets"
+      			xmlns:o="http://omnifaces.org/ui"
+      			xmlns:p="http://primefaces.org/ui"
+      			xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+<!-- Este script se utiliza para abrir los menus de segundo nivel-->
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function() {
+	$('a.submenu').on('mouseover', function(event) {
+		// Previene de lanzar la url de href
+	    event.preventDefault(); 
+	    // Previene de cerrar el menu al hacer click
+	    event.stopPropagation();
+	    // Cierra otras pestañas ya abiertas
+	    $(this).parent().parent().find('.open').removeClass('open');
+	    // Abre la pestaña sobre la que se encuentra el ratón
+	    $(this).parent().addClass('open');
+	});
+});
+//]]>
+</script>
+<h:form id="menuForm">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    	<div class="container-fluid">
+	        <!-- Cuerpo. Menú de la aplicación -->
+		    <div class="navbar-header">
+		    	<h:commandLink styleClass="navbar-brand" title="#{MensajeApp.plantillaNombrePagina}" action="pretty:raiz" >
+		    		<h:outputText value="#{MensajeApp.plantillaNombrePagina}"></h:outputText>
+		    	</h:commandLink>
+		    </div>
+			<div class="collapse navbar-collapse" id="navbar">
+				<ul class="nav navbar-nav">
+				
+					<!-- Menu cuando el usuario no esta logueado -->
+					<ui:fragment rendered="#{empty sesionView.usuario}">
+					    <li class="active">
+					    	<h:commandLink title="#{MensajeApp.menuAcceder}" action="pretty:raiz" value="#{MensajeApp.menuAcceder}" />
+					    </li>
+				    </ui:fragment>
+				    <ui:fragment rendered="#{not empty sesionView.usuario}">
+					    <li>
+					    	<h:commandLink title="#{MensajeApp.menuUsuarios}" action="pretty:usuarios" value="#{MensajeApp.menuUsuarios}" />
+					    </li>
+				    </ui:fragment>
+				</ul>    
+						
+				<ul class="nav navbar-nav navbar-right">
+					<ui:fragment rendered="#{!empty sesionView.usuario}">
+						<li>
+							<a id="desconectar" title="Desconectar" style="margin: 13px 15px 8px; padding: 0;">
+								<i class="fa fa-power-off fa-2x text-danger"></i>
+							</a>
+							<h:commandLink action="#{sesionView.desconectar()}" id="logoutExecute" styleClass="hidden"/>
+							<script type="text/javascript">
+							//<![CDATA[
+								jQuery('#desconectar').on('click', function (event) {
+									event.preventDefault();
+									bootbox.confirm({ 
+										message: '¿Desea salir de la aplicación?', 
+										buttons: { 
+											cancel: { 
+												label: 'Cancelar', 
+												className: 'btn btn-default' 
+											}, 
+											confirm: { 
+												label: 'Aceptar', 
+												className: 'btn btn-primary' }
+											}, 
+											callback: function(result) { 
+												if (result) mojarra.jsfcljs(document.getElementById('menuForm'), {'menuForm:logoutExecute':'menuForm:logoutExecute'}, '');
+											}
+									});
+								});
+							//]]>
+							</script>
+						</li>
+					</ui:fragment>
+				</ul>
+			</div>
+        </div>
+    </div>
+</h:form>
+</ui:composition>

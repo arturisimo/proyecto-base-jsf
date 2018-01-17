@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tablas">
+ 
+	<!-- 	SCHEMAS  -->
+	<sql id="SCH_XXX">xxx</sql>
+ 
+	<!-- ........................................-->
+	<!--      TABLAS .. 		 	 	 		 -->
+	<!-- ........................................-->
+	<sql id="XXX_SEG_USUARIOS"><include refid="tablas.SCH_XXX"/>.XXX_SEG_USUARIOS</sql>
+	<sql id="XXX_SEG_GRUPOS"><include refid="tablas.SCH_XXX"/>.XXX_SEG_GRUPOS</sql>
+	
+	<sql id="XXX_SEG_ROLES"><include refid="tablas.SCH_XXX"/>.XXX_SEG_ROLES</sql>
+	<sql id="XXX_SEG_ROLES_PERMISOS"><include refid="tablas.SCH_XXX"/>.XXX_SEG_ROLES_PERMISOS</sql>
+	
+	<sql id="XXX_SEG_PERMISOS"><include refid="tablas.SCH_XXX"/>.XXX_SEG_PERMISOS</sql>
+	<sql id="XXX_SEG_USUARIOS_ROLES"><include refid="tablas.SCH_XXX"/>.XXX_SEG_USUARIOS_ROLES</sql>
+	
+</mapper>

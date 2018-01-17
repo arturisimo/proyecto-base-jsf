@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.apz.xxx.back.dao.UsuariosDao"> 
+  
+  
+	<resultMap id="resultUsuario" type="Usuario">
+		<result property="id" 					column="ID"/>
+		<result property="nombre" 				column="NOMBRE"/>
+		<result property="login" 				column="LOGIN"/>
+		<result property="password" 			column="PASSWORD"/>
+		<result property="email"	 			column="EMAIL"/>
+		<result property="baja" 				column="BAJA"/>
+ 		
+ 		<!--  ......................... -->
+		<!--  ROLES						-->
+		<!--  ......................... -->	
+		<collection property="roles" column="id" javaType="ArrayList" ofType="Rol">
+ 			<id property="id" column="rol_id"/>
+ 			<result property="nombre" column="rol_nombre"/> 
+ 			<result property="descripcion" column="rol_descripcion"/> 
+ 			<result property="baja" column="rol_baja"/> 
+ 		</collection> 	
+ 		
+	</resultMap>
+	
+	<resultMap id="resultUsuarioDetailEventos" 	type="Usuario">
+	
+		<result property="id" 					column="ID"/>
+		<result property="nombre" 				column="NOMBRE"/>
+		<result property="login" 				column="LOGIN"/>
+		
+		<result property="email"	 			column="EMAIL"/>
+		<result property="password" 			column="PASSWORD"/>
+		<result property="baja" 				column="BAJA"/>
+		
+ 		<!--  ......................... -->
+		<!--  ROLES						-->
+		<!--  ......................... -->	
+		<collection property="roles" column="id" javaType="ArrayList" 	ofType="Rol"> 
+ 						<id 			property="id"				 			column="rol_id"/>
+ 						<result 		property="nombre"  						column="rol_nombre"/> 
+ 						<result 		property="descripcion"  				column="rol_descripcion"/> 
+ 						<result 		property="baja"  					column="rol_baja"/> 
+ 		</collection>
+	</resultMap>
+	
+	<resultMap id="resultUsuarioDetail" 	type="Usuario">
+	
+		<result property="id" 					column="ID"/>
+		<result property="nombre" 				column="NOMBRE"/>
+		<result property="login" 				column="LOGIN"/>
+		
+		<result property="email"	 			column="EMAIL"/>
+		<result property="password" 			column="PASSWORD"/>
+		<result property="baja" 				column="BAJA"/>
+		
+ 		<!--  ......................... -->
+		<!--  ROLES						-->
+		<!--  ......................... -->	
+		<collection property="roles" column="id" javaType="ArrayList" 	ofType="Rol"> 
+ 			<id 			property="id"				 		column="rol_id"/>
+ 			<result 		property="nombre"  					column="rol_nombre"/> 
+ 			<result 		property="descripcion"  			column="rol_descripcion"/> 
+ 			<result 		property="baja"  					column="rol_baja"/> 
+ 		</collection>
+ 		 
+ 		<!--  ......................... -->
+		<!--  PERMISOS					-->
+		<!--  ......................... -->	
+		<collection property="permisos" column="ID" javaType="ArrayList" select="getAllPermisosById"> 
+		</collection>		
+ 	
+	</resultMap>
+	
+	<resultMap id="resultPermiso" 	type="Permiso">
+			<id 			property="id"				 			column="permiso_id"/>
+			<result 		property="nombre"  						column="permiso_nombre"/> 
+			<result 		property="descripcion"  				column="permiso_descripcion"/> 
+			<result 		property="permisoPadre"  				column="permiso_padre"/>
+	</resultMap>
+	 
+	<!-- ..................................... -->
+	<!-- 	getAllUsuarios					   -->
+	<!-- ..................................... -->
+	<select id="getAllUsuarios" parameterType="Usuario" resultType="Usuario">
+    	
+    	    SELECT 
+	    		U.id				AS 	ID,
+	    		U.nombre	  		AS 	NOMBRE,
+	    		U.login				AS 	LOGIN,
+	    		U.password			AS  PASSWORD,
+	    		U.email				AS  EMAIL,
+	    		U.baja			AS 	BAJA
+
+    		FROM <include refid="tablas.XXX_SEG_USUARIOS"/> U
+    		
+    		WHERE
+    		    		
+    		   1=1 
+         	 
+			<if test="nombre != null">
+     			AND UPPER(U.nombre) like UPPER('%${nombre}%')
+			</if> 
+
+    		
+    		<if test="login != null">
+     			AND UPPER(U.login)  like UPPER('%${login}%')
+			</if>
+			
+   </select>
+  	
+  	<!-- ..................................... -->
+  	<!-- 					getUsuarioById				    -->
+  	<!-- ..................................... -->
+
+	
+	  	<select id="getUsuarioById" resultMap="resultUsuarioDetail">
+
+		SELECT 
+	    		U.id				AS 	ID,
+	    		U.nombre	  		AS 	NOMBRE,
+	    		U.login				AS 	LOGIN,
+	    		U.password			AS  PASSWORD,
+	    		U.email				AS  EMAIL,
+	    		U.baja				AS 	BAJA,
+	    		
+	    		R.id                AS  rol_id,
+          		R.nombre            AS  rol_nombre,
+          		R.descripcion       AS  rol_descripcion,
+          		R.baja			    AS  rol_baja,
+          	
+          		P.id				AS  permiso_id,
+          		P.nombre			AS  permiso_nombre,
+          		P.descripcion		AS  permiso_descripcion
+          		
+	    		
+    			FROM <include refid="tablas.XXX_SEG_USUARIOS"/> U
+    		
+	    		LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_USUARIOS_ROLES"/> UR  on  UR.ID_USUARIO = U.id
+	        		LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_ROLES"/>  R ON  UR.id_rol = R.id
+				    	LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_ROLES_PERMISOS"/> RP ON  R.id  = RP.id_rol
+	            			LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_PERMISOS"/> P ON  RP.id_permiso  = P.id  
+	            			    					
+				
+				WHERE U.id = #{id}
+		
+	</select>
+		    		
+	    
+	<!-- ..................................... -->
+  	<!-- 									    -->
+  	<!-- ..................................... -->
+  	<select id="getUsuarioByLogin"  resultMap="resultUsuarioDetailEventos">
+		SELECT 
+	    		U.id				AS 	ID,
+	    		U.nombre	  		AS 	NOMBRE,
+	    		U.login				AS 	LOGIN,
+	    		U.password			AS  PASSWORD, 
+	    		U.email				AS  EMAIL,        		 
+	    		U.baja			AS 	BAJA,
+	    		
+	    		R.id                AS  rol_id,
+          		R.nombre            AS  rol_nombre,
+          		R.descripcion       AS  rol_descripcion,
+          		R.baja		    AS  rol_baja,
+          		
+          		P.id				AS  permiso_id,
+          		P.nombre			AS  permiso_nombre,
+          		P.descripcion		AS  permiso_descripcion
+          		
+	    		
+    			FROM <include refid="tablas.XXX_SEG_USUARIOS"/> U
+    		
+	    		LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_USUARIOS_ROLES"/> UR  on  UR.ID_USUARIO = U.id
+	        		LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_ROLES"/>  R ON  UR.id_rol = R.id
+				    	LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_ROLES_PERMISOS"/> RP ON  R.id  = RP.id_rol
+	            			LEFT OUTER JOIN  <include refid="tablas.XXX_SEG_PERMISOS"/> P ON  RP.id_permiso  = P.id  
+		WHERE 
+		
+				login = #{login} AND U.baja = 0
+	</select>
+	
+	<select id="getAllPermisosById" parameterType="Long" resultMap="resultPermiso">
+  			
+  			SELECT 
+					P.ID		  	 AS permiso_id,
+					P.DESCRIPCION 	 AS permiso_descripcion,
+					P.NOMBRE	 	 AS permiso_nombre,
+					P.PERMISO_PADRE  AS permiso_padre
+ 	    		
+    			FROM <include refid="tablas.XXX_SEG_USUARIOS"/> U
+    		   		INNER JOIN <include refid="tablas.XXX_SEG_ROLES"/> R on GR.ID_ROL = R.id AND R.baja=0
+	            		INNER JOIN <include refid="tablas.XXX_SEG_ROLES_PERMISOS"/> RP ON  R.id = RP.ID_ROL
+							INNER JOIN <include refid="tablas.XXX_SEG_PERMISOS"/> P 
+								ON RP.id_PERMISO = P.ID 
+				WHERE U.ID= #{id}
+            
+         		UNION
+          
+          		SELECT 
+ 	    			P1.ID		  	 	AS permiso_id,
+					P1.DESCRIPCION 	 	AS permiso_descripcion,
+					P1.NOMBRE	 	 	AS permiso_nombre,
+					P1.PERMISO_PADRE  	AS permiso_padre	
+ 	    			
+    			FROM <include refid="tablas.XXX_SEG_USUARIOS"/> U1
+        			INNER join <include refid="tablas.XXX_SEG_USUARIOS_ROLES"/> UR1  ON  UR1.id_usuario = U1.id
+          				INNER JOIN <include refid="tablas.XXX_SEG_ROLES"/> R1 on UR1.ID_ROL = R1.id AND R1.baja=0
+              				INNER JOIN <include refid="tablas.XXX_SEG_ROLES_PERMISOS"/> RP1 ON  R1.id = RP1.ID_ROL
+                				INNER JOIN <include refid="tablas.XXX_SEG_PERMISOS"/> P1 
+                					ON RP1.id_PERMISO = P1.ID
+                   						
+                WHERE U1.id= #{id}
+  			
+  	</select>
+  
+  	
+  	<select id="getNumUsuariosWithLogin" parameterType="String" resultType="Integer">
+	   SELECT 
+	         	COUNT (*)
+	   FROM 
+	         	<include refid="tablas.XXX_SEG_USUARIOS"/>
+	   WHERE 
+	         	login = #{login}
+    </select>
+    
+    <insert id="insertUsuario" parameterType="Usuario">  
+    	 
+	    INSERT INTO 
+	    		<include refid="tablas.XXX_SEG_USUARIOS"/>
+        		( 
+        			nombre,
+        			login,
+        			password,
+        			email,
+        			actualizado
+        	 	 ) 
+        VALUES (
+        		 #{nombre},
+        		 #{login},
+        		 #{password:VARCHAR},
+        		 #{email:VARCHAR}    		 
+       		)
+	</insert> 
+	
+	<insert id="insertUsuarioRol" parameterType="java.util.Map" >
+        
+	    INSERT INTO 
+	    		<include refid="tablas.XXX_SEG_USUARIOS_ROLES"/>
+        		( 
+        			id_usuario,
+        			id_rol
+        	 	 ) 
+         VALUES (
+        		 #{idusuario}, 
+        		 #{idrol}
+       		)
+       		
+	</insert>
+	
+	<delete id="deleteUsuarioRoles"  parameterType="java.util.Map"  >
+	    DELETE FROM 
+	    	<include refid="tablas.XXX_SEG_USUARIOS_ROLES"/>
+        WHERE
+         	id_usuario = #{id} 
+        	
+	</delete> 
+	
+	<!-- ............................... -->
+	<!-- ............................... -->
+	<update id="altaUsuario" parameterType="Long" >  
+    	 UPDATE <include refid="tablas.XXX_SEG_USUARIOS"/>
+    	 
+    	 	SET baja = 0
+    	 
+    	 WHERE id = #{id} 
+	</update> 
+	
+	<!-- ............................... -->
+	<!-- ............................... -->
+	<update id="updateUsuario" parameterType="Usuario">  
+    	 UPDATE 
+    	 	<include refid="tablas.XXX_SEG_USUARIOS"/>
+    	 SET
+   	 		 nombre  	 			= #{nombre}, 
+   	 		 login 	  	 			= #{login},
+   	 		 password 	 			= #{password:VARCHAR}, 	 
+   	 		 email 	 	 			= #{email}
+    	 WHERE 
+    	 	id = #{id} 
+	</update> 
+	
+	<!-- .............................................. -->
+	<!-- .............................................. -->
+  	<delete id="deleteUsuario" parameterType="Long">  			
+	    UPDATE  
+	    	<include refid="tablas.XXX_SEG_USUARIOS"/>
+	    	
+	    	SET BAJA=1 
+        
+        WHERE id = #{id}
+	</delete> 
+	
+	<!-- .............................................. -->
+	<!-- .............................................. -->
+  	<delete id="eliminarRelacionesUsuarioRol" parameterType="Long">  			
+	    DELETE FROM 
+	    	<include refid="tablas.XXX_SEG_USUARIOS_ROLES"/>
+        WHERE
+        	id_usuario = #{id} 
+	</delete>
+	
+	
+</mapper>

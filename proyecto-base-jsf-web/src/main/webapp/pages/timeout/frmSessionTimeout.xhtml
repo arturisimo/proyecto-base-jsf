@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<h:outputStylesheet library="css" name="table-style.css" />
+</h:head>
+<h:body>
+	<h1>#{MensajeApp.procesos}</h1>
+	<h:form>
+	
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-10 col-xs-offset-1 well">
+					<p>
+						<h:outputText value="#{MensajeApp.frmSessionTimeout_Descripcion}" />
+					</p>
+					
+					<p style="text-align: right;">
+						<a href="#{requestScope['javax.servlet.error.request_uri']}" value="#{MensajeApp.frmSessionTimeout_Inicio}" />
+					</p>
+				</div>
+			</div>
+		</div>
+</h:form>
+</h:body>
+</html>		

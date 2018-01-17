@@ -1,0 +1,68 @@
+<ui:composition template="/layouts/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" 
+				xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+				xmlns:pretty="http://ocpsoft.com/prettyfaces" xmlns:o="http://omnifaces.org/ui">
+
+
+	<ui:param name="bodyId" value="presentacionBody"/>
+	
+	<ui:define name="body">
+	
+	<h:body>
+	
+		<div class="splash">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center">
+						<h1><i class="fa fa-cogs"></i> Presentacion </h1>
+					</div>
+				</div>
+			</div>
+		</div>
+    
+
+	    <div class="container">
+	      <!-- Example row of columns -->
+	      <div class="row">
+	        <div class="col-lg-10 center-col">
+	        	<h4 class="h4">Tecnología</h4>
+				<p>
+				<ul>
+					<li>Spring 4</li>
+					<li>PrimeFaces 5.1</li>
+					<li>Mybatis 3.3.0</li>
+					<li>JDK8</li>
+				</ul>
+				</p>
+				<h4 class="h4">Modulos</h4>
+				<p>El proyecto consta de un módulo web que depende de dos jar:
+				<ul>
+					<li><strong>proyecto-base-jsf-web</strong>(war) - Front-end de la aplicacion</li>
+					<li><strong>proyecto-base-jsf-back</strong>(jar) - consulta BBDD / generacion informes / envío de mails...</li>
+					<li><strong>viajeros-auth</strong>(jar) - validacion WS directorio activo</li>
+				</ul></p>
+				<h4 class="h4">Configuración Generación war</h4>
+				<p>Se puede modificar la configuración depediendo del entorno <strong>desa</strong> y <strong>prod</strong>
+				<ul>
+					<li>Configuración entorno desarrollo proyecto-base-jsf-web/src/main/resources/env/<strong>desa.properties</strong></li>
+				</ul>
+				<pre><code>mvn clean install -Pdesa</code></pre>
+				<ul>
+					<li>Configuración entorno producción proyecto-base-jsf-web/src/main/resources/env/<strong>prod.properties</strong></li>
+				</ul>
+				<pre><code>mvn clean install -Pprod</code></pre>
+				</p>
+				<p>Copian la configuracion en los properties que utiliza la aplicacion
+				<ul>
+					<li>Configuración general - proyecto-base-jsf-web/src/main/resources/<strong>environment.properties</strong></li>
+					<li>Logs - proyecto-base-jsf-web/src/main/resources/<strong>log4j.properties</strong></li>
+				</ul></p>
+				<h4 class="h4">Documentación</h4>
+				<p></p>
+				<p><a href="https://www.primefaces.org/documentation/">Primefaces documentación</a></p>
+								
+			</div>
+		</div>
+		</div>
+	</h:body>
+	</ui:define>
+</ui:composition>

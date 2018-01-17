@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mappeR.dtd">
+  
+<mapper namespace="org.apz.xxx.back.dao.RolDao">
+
+
+	<resultMap id="resultRol" type="Rol">
+	
+		<result property="id" 					column="ID"/>
+		<result property="nombre" 				column="NOMBRE"/>
+		<result property="descripcion" 			column="DESCRIPCION"/>
+		<result property="baja" 				column="BAJA"/>
+
+		<!--  ......................... -->
+		<!--  PERMISOS						-->
+		<!--  ......................... -->	
+		<collection property="list_permisos"   column="id" javaType="ArrayList" 	ofType="Permiso"> 
+ 						<id 			property="id"			 		column="perm_id"/>
+ 						<result 		property="nombre"  				column="perm_nombre"/> 
+ 						<result 		property="descripcion"  		column="perm_descripcion"/> 
+	  					<result 		property="permisoPadre" 		column="PERMISO_PADRE"/>
+ 		</collection> 
+ 		
+	</resultMap>
+	
+	
+	
+	<!-- ..................................... -->
+	<!-- 	getAllRoles				   -->
+	<!-- ..................................... -->
+	<select id="getAllRoles" 
+			parameterType="Rol"
+			resultMap="resultRol">
+    	
+    	    SELECT DISTINCT
+	    		R.id				AS 	ID,
+	    		R.nombre	  		AS 	NOMBRE,
+	    		R.descripcion		AS 	DESCRIPCION,
+	    		R.baja			AS  BAJA,
+	    		P.id				AS 	PERM_ID,
+	    		P.nombre	  		AS 	PERM_NOMBRE,
+	    		P.descripcion		AS 	PERM_DESCRIPCION
+	    		
+    		FROM <include refid="tablas.XXX_SEG_ROLES"/>   R
+          	  LEFT OUTER JOIN 	<include refid="tablas.XXX_SEG_ROLES_PERMISOS"/>  	RP  ON  R.id= RP.id_rol
+         	  LEFT OUTER JOIN	<include refid="tablas.XXX_SEG_PERMISOS"/> 	   		P   ON  RP.id_permiso = P.id
+         	   
+         	   	WHERE 
+         	   		1=1
+         	   
+         		<if test="list_id_permisos !=null">         		
+         			<foreach   item="permisoId"   collection="list_id_permisos" >
+     					 AND ROL_HAS_PERMISSION(RP.id_rol,#{permisoId}) = 1
+  					</foreach>  					
+				</if> 
+				
+				<if test="nombre !=null">
+     				AND UPPER(R.nombre) like UPPER('%${nombre}%') OR UPPER(R.descripcion) like UPPER('%${nombre}%')
+				</if> 
+				
+				<if test="alta_busqueda != baja_busqueda">
+     				<if test="alta_busqueda">
+     					AND R.baja = 0
+     				</if>
+     				
+     				<if test="baja_busqueda">
+     					AND R.baja = 1
+     				</if>
+				</if> 
+			ORDER BY ID ASC
+				 
+         	
+  	</select>
+  	
+  	<!-- ..................................... -->
+  	<!-- 									    -->
+  	<!-- ..................................... -->
+  	<select id="getRolById" 
+  			resultMap="resultRol">
+
+
+		SELECT 
+	    		R.id				AS 	ID,
+	    		R.nombre	  		AS 	NOMBRE,
+	    		R.descripcion		AS 	DESCRIPCION,
+	    		R.tipo				AS 	TIPO,
+	    		R.baja			AS  BAJA,
+	    		P.id				AS 	PERM_ID,
+	    		P.nombre	  		AS 	PERM_NOMBRE,
+	    		P.descripcion		AS 	PERM_DESCRIPCION,
+	    		P.permiso_padre		AS 	PERMISO_PADRE
+	    		
+    		FROM <include refid="tablas.XXX_SEG_ROLES"/>   R
+          	  	LEFT OUTER JOIN <include refid="tablas.XXX_SEG_ROLES_PERMISOS"/>  RP  ON  RP.id_rol = R.id
+         	   	LEFT OUTER JOIN <include refid="tablas.XXX_SEG_PERMISOS"/> 	   	  P   ON  RP.id_permiso = P.id
+
+
+		WHERE R.id = #{id}
+
+
+	</select>
+	
+	
+	<!-- ..................................... -->
+  	<!-- 									    -->
+  	<!-- ..................................... -->
+  	<select id="getRolesWithPermiso" 
+  	 		parameterType="Long"
+  			resultMap="resultRol">
+		SELECT 
+    		R.id				AS 	ID,
+    		R.nombre	  		AS 	NOMBRE,
+    		R.descripcion		AS 	DESCRIPCION
+    	FROM 
+    		<include refid="tablas.XXX_SEG_ROLES"/>  R, 
+    		<include refid="tablas.XXX_SEG_ROLES_PERMISOS"/>  RP
+		WHERE 
+			R.id = RP.id_rol AND 
+			RP.id_permiso = #{id_permiso}
+
+	</select>
+  	
+  	
+  	<!-- ............................... -->
+	<!-- ............................... -->
+	<insert id="insertRol" parameterType="Rol">  
+    	 
+	    INSERT INTO 
+	    		<include refid="tablas.XXX_SEG_ROLES"/>
+        		( 
+        			nombre,
+        			descripcion,
+        			tipo
+        	 	 ) 
+        VALUES (
+        		 #{nombre},
+        		 #{descripcion:VARCHAR},
+        		 0
+       		)
+	</insert> 
+
+	<!-- .............................................. -->
+	<!-- .............................................. -->
+  	<insert id="insertRolPermiso" 
+  			parameterType="java.util.Map"  			
+			>
+        
+	    INSERT INTO 
+	    		<include refid="tablas.XXX_SEG_ROLES_PERMISOS"/>
+        		( 
+        			id_rol,
+        			id_permiso
+        	 	 ) 
+         VALUES (
+        		 #{idrol}, 
+        		 #{idpermiso}
+       		)
+       		
+	</insert> 
+	
+	
+	<!-- .............................................. -->
+	<!-- .............................................. -->
+  	<delete id="deleteRolPermiso" 
+  			parameterType="java.util.Map"  			
+			>
+			
+	    DELETE FROM 
+	    	
+	    	<include refid="tablas.XXX_SEG_ROLES_PERMISOS"/>
+	    	
+        WHERE
+         
+        	id_rol = #{idrol} AND 
+        	id_permiso = #{idpermiso}
+        	
+	</delete> 
+
+
+	<!-- ............................... -->
+	<!-- ............................... -->
+	<update id="updateRol" parameterType="Rol">  
+    	 UPDATE <include refid="tablas.XXX_SEG_ROLES"/>
+    	 	
+    	 	SET 
+    	 		nombre 		= #{nombre}, 
+    	 		descripcion = #{descripcion:VARCHAR}
+    	 
+    	 WHERE id = #{id} 
+	</update> 
+
+	<!-- ............................... -->
+	<!-- ............................... -->
+	<update id="bajaRol" parameterType="Long">  
+    	 UPDATE <include refid="tablas.XXX_SEG_ROLES"/>
+    	 
+    	 	SET baja = 1 
+    	 
+    	 WHERE id = #{id} 
+	</update> 
+	
+	
+	<!-- ............................... -->
+	<!-- ............................... -->
+	<update id="altaRol" parameterType="Long">  
+    	 UPDATE <include refid="tablas.XXX_SEG_ROLES"/>
+    	 
+    	 	SET baja = 0
+    	 
+    	 WHERE id = #{id} 
+	</update> 
+	
+<!-- 	.............................................. -->
+<!-- 	.............................................. -->
+  	<delete id="deleteRolPermisos" parameterType="java.util.Map" >
+	    DELETE FROM 
+	    	<include refid="tablas.XXX_SEG_ROLES_PERMISOS"/>
+        WHERE
+        	id_rol = #{idrol}
+        	
+	</delete> 
+	
+<!-- 	.............................................. -->
+<!-- 	.............................................. -->
+  	<delete id="deleteRol" parameterType="Long">  			
+	    DELETE FROM 
+	    	<include refid="tablas.XXX_SEG_ROLES"/>
+        WHERE id = #{id}
+	</delete> 
+	
+	
+<!-- 	.............................................. -->
+<!-- 	.............................................. -->
+  	<delete id="eliminarRol" parameterType="Long">  			
+	    DELETE FROM 
+	    	<include refid="tablas.XXX_SEG_ROLES"/>
+        WHERE id = #{id}
+	</delete> 
+	 
+<!-- 	.............................................. -->
+<!-- 	.............................................. -->
+  	<delete id="eliminarRelacionesRolPermiso" parameterType="Long">  			
+	    DELETE FROM 
+	    	<include refid="tablas.XXX_SEG_ROLES_PERMISOS"/>
+        WHERE
+        	id_rol = #{id} 
+	</delete> 
+	
+<!-- 	.............................................. -->
+<!-- 	.............................................. -->
+  	<delete id="eliminarRelacionesRolUsuario" parameterType="Long">  			
+	    DELETE FROM 
+	    	<include refid="tablas.XXX_SEG_USUARIOS_ROLES"/>
+        WHERE
+        	id_rol = #{id} 
+	</delete>
+	
+<!-- ............................................................................................. -->
+<!-- ............................................................................................. -->
+</mapper>

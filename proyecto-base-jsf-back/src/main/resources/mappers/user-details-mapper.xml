@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apz.xxx.back.dao.UserDetailsDAO">
+
+    <select id="getRoles" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select r.nombre from xxx.XXX_SEG_USUARIOS_ROLES ur, xxx.XXX_SEG_ROLES r where ur.id_rol = r.id and ur.id_usuario=#{idUsuario}
+    </select>
+
+    <select id="getUserDetail" parameterType="java.lang.String" resultType="Usuario">
+        select id, login, password from xxx.XXX_SEG_USUARIOS where login=#{login}
+    </select>
+    
+     <select id="getUsuarios" resultType="Usuario">
+        select id, login, password from xxx.XXX_SEG_USUARIOS
+    </select>
+    
+</mapper>
