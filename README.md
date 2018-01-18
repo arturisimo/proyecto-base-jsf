@@ -13,7 +13,6 @@ El proyecto consta de un módulo web que depende de dos jar:
 
 * **proyecto-base-jsf-web** (war) - Front-end de la aplicacion
 * **proyecto-base-jsf-back** (jar) - consulta BBDD / generacion informes / envío de mails... 
-* **viajeros-auth** (jar) - validacion WS directorio activo
 
 
 **Configuración Generación war**
